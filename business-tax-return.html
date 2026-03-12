@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TaxFlow Pro — Business Tax Return 2025</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue:      #0077C8;
+      --blue-dark: #005A9E;
+      --blue-light:#E8F4FF;
+      --green:     #00A86B;
+      --green-h:   #008558;
+      --red:       #D93025;
+      --yellow-bg: #FFFBEA;
+      --yellow-bd: #F6C90E;
+      --text:      #1A1A2E;
+      --muted:     #6B7280;
+      --border:    #D1D5DB;
+      --bg:        #F3F6FB;
+      --card:      #FFFFFF;
+      --accent:    #06D6A0;
+    }
+
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+    /* HEADER */
+    header { background: var(--blue); color: #fff; position: sticky; top: 0; z-index: 200; box-shadow: 0 2px 10px rgba(0,0,0,.2); }
+    .hdr-top { display: flex; align-items: center; justify-content: space-between; padding: 14px 28px; }
+    .logo { font-size: 22px; font-weight: 800; letter-spacing: -.4px; }
+    .logo span { color: var(--accent); }
+    .live-est { text-align: right; }
+    .live-est .lbl { font-size: 11px; opacity: .75; text-transform: uppercase; letter-spacing: .5px; }
+    .live-est .amt { font-size: 22px; font-weight: 700; line-height: 1.1; }
+    .prog-wrap { padding: 0 28px 12px; }
+    .prog-meta { display: flex; justify-content: space-between; font-size: 11px; opacity: .8; margin-bottom: 5px; }
+    .prog-track { height: 7px; background: rgba(255,255,255,.25); border-radius: 4px; overflow: hidden; }
+    .prog-fill { height: 100%; background: var(--accent); border-radius: 4px; transition: width .4s ease; }
+
+    /* LAYOUT */
+    main { max-width: 1080px; margin: 36px auto; padding: 0 20px; display: grid; grid-template-columns: 1fr 300px; gap: 24px; }
+    @media (max-width: 780px) { main { grid-template-columns: 1fr; } .sidebar { order: -1; } }
+
+    /* CARD */
+    .card { background: var(--card); border-radius: 16px; padding: 40px 44px; box-shadow: 0 4px 24px rgba(0,0,0,.07); }
+    .step-chip { display: inline-block; background: var(--blue-light); color: var(--blue); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .6px; padding: 4px 10px; border-radius: 20px; margin-bottom: 10px; }
+    .card h1 { font-size: 26px; font-weight: 800; line-height: 1.2; margin-bottom: 8px; }
+    .card .sub { font-size: 15px; color: var(--muted); margin-bottom: 28px; line-height: 1.55; }
+
+    /* SIDEBAR */
+    .sidebar { position: sticky; top: 90px; height: fit-content; }
+    .sb-card { background: var(--card); border-radius: 16px; padding: 22px; box-shadow: 0 4px 24px rgba(0,0,0,.07); }
+    .sb-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .6px; color: var(--muted); margin-bottom: 14px; }
+    .sb-row { display: flex; justify-content: space-between; align-items: center; padding: 9px 0; border-bottom: 1px solid var(--border); font-size: 13.5px; }
+    .sb-row:last-of-type { border-bottom: none; }
+    .sb-row .v { font-weight: 600; }
+    .sb-row .v.neg { color: var(--green); }
+    .sb-row .v.pos { color: var(--red); }
+    .sb-div { border: none; border-top: 1px dashed var(--border); margin: 8px 0; }
+    .sb-total { display: flex; justify-content: space-between; align-items: center; padding: 14px 0 4px; font-weight: 800; font-size: 16px; color: var(--blue); }
+    .sb-note { font-size: 10.5px; color: var(--muted); line-height: 1.4; margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--border); }
+
+    /* FORMS */
+    .fg { margin-bottom: 22px; }
+    .fl { display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+    .fl .hint { font-weight: 400; color: var(--muted); font-size: 12.5px; }
+    input[type=text], input[type=number], select { width: 100%; padding: 13px 15px; border: 2px solid var(--border); border-radius: 10px; font-size: 15px; color: var(--text); background: #fff; transition: border-color .2s, box-shadow .2s; }
+    input[type=text]:focus, input[type=number]:focus, select:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px rgba(0,119,200,.12); }
+    .dw { position: relative; }
+    .dw::before { content: '$'; position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--muted); pointer-events: none; font-size: 15px; }
+    .dw input { padding-left: 26px; }
+    .fg2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 560px) { .fg2 { grid-template-columns: 1fr; } }
+
+    /* RADIO CARDS */
+    .rg { display: grid; gap: 11px; }
+    .rc { border: 2px solid var(--border); border-radius: 12px; padding: 15px 18px; cursor: pointer; display: flex; align-items: flex-start; gap: 13px; transition: border-color .18s, background .18s; }
+    .rc:hover { border-color: #93C5FD; background: #F8FBFF; }
+    .rc.sel { border-color: var(--blue); background: var(--blue-light); }
+    .rc input[type=radio] { accent-color: var(--blue); width: 17px; height: 17px; flex-shrink: 0; margin-top: 3px; }
+    .rc-body .t { font-weight: 700; font-size: 14.5px; margin-bottom: 2px; }
+    .rc-body .d { font-size: 12.5px; color: var(--muted); line-height: 1.4; }
+
+    /* BUTTONS */
+    .btn-row { display: flex; gap: 12px; margin-top: 20px; }
+    .btn-back { flex: 0 0 auto; padding: 14px 28px; border: 2px solid var(--border); border-radius: 10px; background: transparent; color: var(--blue); font-size: 15px; font-weight: 600; cursor: pointer; transition: .18s; }
+    .btn-back:hover { border-color: var(--blue); background: var(--blue-light); }
+    .btn-cont { flex: 1; padding: 16px 24px; border: none; border-radius: 10px; background: var(--green); color: #fff; font-size: 16px; font-weight: 800; cursor: pointer; transition: .18s; }
+    .btn-cont:hover { background: var(--green-h); transform: translateY(-1px); box-shadow: 0 4px 14px rgba(0,168,107,.3); }
+
+    /* MISC */
+    .alert { border-radius: 10px; padding: 14px 16px; font-size: 13.5px; line-height: 1.55; margin-bottom: 20px; }
+    .alert.info { background: #EFF6FF; border: 1px solid #BFDBFE; }
+    .alert.warn { background: var(--yellow-bg); border: 1px solid var(--yellow-bd); }
+    hr.sd { border: none; border-top: 1px solid var(--border); margin: 22px 0; }
+    .sh { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .7px; color: var(--muted); margin-bottom: 14px; }
+    .rb { background: #F9FAFB; border-radius: 10px; padding: 16px; font-size: 14px; margin-bottom: 22px; }
+    .rl { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #EDEFF2; }
+    .rl:last-child { border-bottom: none; }
+    .rl.bold { font-weight: 700; font-size: 15px; }
+
+    /* WELCOME */
+    .wi { width: 72px; height: 72px; border-radius: 18px; background: linear-gradient(135deg, var(--blue), #38BDF8); display: flex; align-items: center; justify-content: center; font-size: 34px; margin-bottom: 22px; }
+    .fl-list { list-style: none; margin: 20px 0 28px; }
+    .fl-list li { display: flex; align-items: center; gap: 12px; padding: 10px 0; font-size: 15px; border-bottom: 1px solid var(--border); }
+    .fl-list li:last-child { border-bottom: none; }
+    .chk { color: var(--green); font-size: 17px; }
+
+    /* TAX RETURN */
+    #pret { font-family: "Courier New", Courier, monospace; font-size: 12.5px; line-height: 1.5; border: 1px solid var(--border); border-radius: 10px; padding: 28px; background: #FAFAFA; }
+    .rh { text-align: center; border-bottom: 3px double #000; padding-bottom: 14px; margin-bottom: 22px; }
+    .rht { font-size: 16px; font-weight: bold; letter-spacing: .5px; }
+    .rs { margin-bottom: 20px; }
+    .rst { font-weight: bold; background: #E9EDF2; padding: 6px 10px; margin-bottom: 6px; font-size: 11.5px; text-transform: uppercase; letter-spacing: .4px; }
+    .rln { display: flex; justify-content: space-between; padding: 4px 10px; border-bottom: 1px dotted #D1D5DB; }
+    .rln.sub { font-weight: bold; border-top: 1px solid #000; border-bottom: 1px solid #000; background: #F0F4F8; }
+    .rln.tot { font-weight: bold; font-size: 13.5px; border-top: 2px solid #000; border-bottom: 2px solid #000; background: #FFF3CD; }
+    .sig-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding: 10px; font-size: 11.5px; margin-top: 6px; }
+    .sig-line { border-bottom: 1px solid #000; padding-bottom: 3px; margin-bottom: 3px; min-height: 22px; }
+    .abar { display: flex; gap: 12px; margin-bottom: 28px; }
+    .btn-print { flex: 1; padding: 14px; background: var(--blue); color: #fff; border: none; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; transition: .18s; }
+    .btn-print:hover { background: var(--blue-dark); }
+    .btn-dl { flex: 1; padding: 14px; background: #fff; color: var(--blue); border: 2px solid var(--blue); border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; transition: .18s; }
+    .btn-dl:hover { background: var(--blue-light); }
+
+    /* PRINT */
+    @media print {
+      header, .sidebar, .abar, .btn-row, .step-chip, .card > h1, .card > .sub { display: none !important; }
+      main { display: block !important; max-width: 100%; margin: 0; padding: 0; }
+      .card { box-shadow: none; border-radius: 0; padding: 12px; }
+      body { background: white; }
+      #pret { border: none; padding: 0; background: white; font-size: 11px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="hdr-top">
+    <div class="logo">Tax<span>Flow</span> Pro</div>
+    <div class="live-est">
+      <div class="lbl">Estimated Tax Liability</div>
+      <div class="amt" id="hdrAmt">$0</div>
+    </div>
+  </div>
+  <div class="prog-wrap">
+    <div class="prog-meta">
+      <span id="progLbl">Getting Started</span>
+      <span id="progPct">0%</span>
+    </div>
+    <div class="prog-track"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+  </div>
+</header>
+
+<main>
+  <div id="mc"></div>
+  <div class="sidebar">
+    <div class="sb-card">
+      <div class="sb-title">Live Tax Estimate</div>
+      <div class="sb-row"><span>Gross Revenue</span>  <span class="v" id="sbRev">$0</span></div>
+      <div class="sb-row"><span>Cost of Goods</span>  <span class="v neg" id="sbCOGS">($0)</span></div>
+      <div class="sb-row"><span>Expenses</span>       <span class="v neg" id="sbExp">($0)</span></div>
+      <div class="sb-row"><span>Net Profit</span>     <span class="v" id="sbProfit">$0</span></div>
+      <hr class="sb-div">
+      <div class="sb-row"><span>SE Tax</span>         <span class="v pos" id="sbSE">$0</span></div>
+      <div class="sb-row"><span>Federal Income</span> <span class="v pos" id="sbFed">$0</span></div>
+      <div class="sb-row"><span>State Income</span>   <span class="v pos" id="sbSt">$0</span></div>
+      <hr class="sb-div">
+      <div class="sb-total"><span>Total Owed</span><span id="sbTot">$0</span></div>
+      <p class="sb-note">Estimates update live as you type. For planning only — consult a CPA before filing.</p>
+    </div>
+  </div>
+</main>
+
+<script>
+/* ─── STATE ─── */
+const S = {
+  entityType:'sole_prop', businessName:'', ein:'', businessAddress:'',
+  businessCity:'', businessState:'CA', businessZip:'', taxYear:'2025',
+  ownerName:'', ownerSSN:'', filingStatus:'single',
+  grossSales:0, returnsAllowances:0, otherIncome:0,
+  beginningInventory:0, purchases:0, endingInventory:0,
+  advertising:0, carExpenses:0, depreciation:0, employeeBenefits:0,
+  insurance:0, legalProfessional:0, officeExpense:0, rentEquipment:0,
+  rentSpace:0, repairsMaintenance:0, supplies:0, taxesLicenses:0,
+  travel:0, meals:0, utilities:0, wages:0, otherExpenses:0,
+  section179:0, qbi:true,
+};
+
+const SCREENS = ['welcome','entity','bizinfo','personal','revenue','cogs','expenses','deductions','review','taxreturn'];
+const SLABELS = ['Getting Started','Entity Type','Business Info','Personal Info','Revenue','Cost of Goods','Expenses','Deductions','Review','Tax Return'];
+let cur = 0;
+
+/* ─── TAX MATH ─── */
+const BR = {
+  single:[[0,11925,.10],[11925,48475,.12],[48475,103350,.22],[103350,197300,.24],[197300,250525,.32],[250525,626350,.35],[626350,1e12,.37]],
+  mfj:   [[0,23850,.10],[23850,96950,.12],[96950,206700,.22],[206700,394600,.24],[394600,501050,.32],[501050,751600,.35],[751600,1e12,.37]],
+  mfs:   [[0,11925,.10],[11925,48475,.12],[48475,103350,.22],[103350,197300,.24],[197300,250525,.32],[250525,313200,.35],[313200,1e12,.37]],
+  hoh:   [[0,17000,.10],[17000,64850,.12],[64850,103350,.22],[103350,197300,.24],[197300,250500,.32],[250500,626350,.35],[626350,1e12,.37]],
+};
+const STD = {single:15000,mfj:30000,mfs:15000,hoh:22500};
+const SR = {AL:.05,AK:0,AZ:.025,AR:.044,CA:.093,CO:.044,CT:.065,DE:.066,FL:0,GA:.055,HI:.11,ID:.058,IL:.0495,IN:.03,IA:.056,KS:.057,KY:.045,LA:.03,ME:.075,MD:.0575,MA:.05,MI:.0425,MN:.0985,MS:.05,MO:.048,MT:.069,NE:.0664,NV:0,NH:0,NJ:.1075,NM:.049,NY:.109,NC:.0475,ND:.025,OH:.035,OK:.0475,OR:.099,PA:.0307,RI:.0599,SC:.07,SD:0,TN:0,TX:0,UT:.0495,VT:.0875,VA:.0575,WA:0,WV:.065,WI:.0765,WY:0,DC:.0895};
+
+function brTax(inc, br) {
+  let t = 0;
+  for (const [lo,hi,r] of br) { if (inc<=lo) break; t+=(Math.min(inc,hi)-lo)*r; }
+  return t;
+}
+function calc() {
+  const gross = Math.max(0,(S.grossSales||0)-(S.returnsAllowances||0)+(S.otherIncome||0));
+  const cogs  = Math.max(0,(S.beginningInventory||0)+(S.purchases||0)-(S.endingInventory||0));
+  const exp   = [S.advertising,S.carExpenses,S.depreciation,S.employeeBenefits,S.insurance,S.legalProfessional,S.officeExpense,S.rentEquipment,S.rentSpace,S.repairsMaintenance,S.supplies,S.taxesLicenses,S.travel,(S.meals||0)*.5,S.utilities,S.wages,S.otherExpenses,S.section179].reduce((a,v)=>a+(v||0),0);
+  const net   = gross - cogs - exp;
+  let seTax=0, fedTax=0, stateTax=0, deductSE=0, qbiDed=0;
+  const br = BR[S.filingStatus]||BR.single;
+  const std = STD[S.filingStatus]||15000;
+  const sr = SR[S.businessState]??0.05;
+  if (S.entityType==='ccorp') {
+    if (net>0) { fedTax=net*.21; stateTax=net*sr*.85; }
+  } else {
+    if (net>0) {
+      if (S.entityType==='sole_prop'||S.entityType==='llc') {
+        const senet=net*.9235;
+        const cap=176100;
+        seTax = senet<=cap ? senet*.153 : cap*.124+senet*.029+(senet>200000?(senet-200000)*.009:0);
+        deductSE=seTax/2;
+      }
+      if (S.qbi) qbiDed=net*.20;
+      const taxable=Math.max(0,net-deductSE-qbiDed-std);
+      fedTax=brTax(taxable,br);
+      stateTax=Math.max(0,(net-deductSE))*sr;
+    }
+  }
+  return {gross,cogs,exp,net,seTax,deductSE,qbiDed,fedTax,stateTax,total:seTax+fedTax+stateTax};
+}
+
+/* ─── UTILS ─── */
+const $=n=>'$'+Math.abs(n||0).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0});
+const $n=n=>'('+$(n)+')';
+
+function refreshSB() {
+  const t=calc();
+  document.getElementById('sbRev').textContent=$(t.gross);
+  document.getElementById('sbCOGS').textContent=$n(t.cogs);
+  document.getElementById('sbExp').textContent=$n(t.exp);
+  document.getElementById('sbProfit').textContent=$(t.net);
+  document.getElementById('sbSE').textContent=$(t.seTax);
+  document.getElementById('sbFed').textContent=$(t.fedTax);
+  document.getElementById('sbSt').textContent=$(t.stateTax);
+  document.getElementById('sbTot').textContent=$(t.total);
+  document.getElementById('hdrAmt').textContent=$(t.total);
+}
+function refreshProg() {
+  const pct=Math.round((cur/(SCREENS.length-1))*100);
+  document.getElementById('progFill').style.width=pct+'%';
+  document.getElementById('progPct').textContent=pct+'%';
+  document.getElementById('progLbl').textContent=SLABELS[cur];
+}
+function collect() {
+  document.querySelectorAll('#mc input,#mc select').forEach(el=>{
+    if (!el.name||!(el.name in S)) return;
+    if (el.type==='radio') { if(el.checked) S[el.name]=el.value; }
+    else if (el.type==='checkbox') S[el.name]=el.checked;
+    else if (el.type==='number') S[el.name]=parseFloat(el.value)||0;
+    else S[el.name]=el.value;
+  });
+  refreshSB();
+}
+function go(d) {
+  collect();
+  let n=cur+d;
+  if (SCREENS[n]==='personal'&&S.entityType==='ccorp') n+=d;
+  cur=Math.max(0,Math.min(SCREENS.length-1,n));
+  render(); window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ─── MONEY FIELD HELPER ─── */
+function mf(id,label,hint,key) {
+  return `<div class="fg"><div class="fl">${label}${hint?` <span class="hint">${hint}</span>`:''}</div>
+  <div class="dw"><input type="number" id="${id}" name="${key}" value="${S[key]||''}" min="0" placeholder="0" oninput="S['${key}']=parseFloat(this.value)||0;refreshSB()"></div></div>`;
+}
+
+/* ─── SCREENS ─── */
+function sWelcome() { return `<div class="card">
+  <div class="wi">🏢</div>
+  <span class="step-chip">Tax Year 2025</span>
+  <h1>Let's prepare your business tax return</h1>
+  <p class="sub">Step-by-step guidance through your business taxes — calculating what you owe, applying every deduction, and generating a ready-to-file summary.</p>
+  <ul class="fl-list">
+    <li><span class="chk">✓</span> Sole Proprietors, Partnerships/LLCs, S-Corps &amp; C-Corps</li>
+    <li><span class="chk">✓</span> 2025 federal brackets with SE tax &amp; QBI deduction (§199A)</li>
+    <li><span class="chk">✓</span> State income tax estimates for all 50 states + DC</li>
+    <li><span class="chk">✓</span> Section 179 expensing up to $1,220,000</li>
+    <li><span class="chk">✓</span> Printable tax return with signature block &amp; filing instructions</li>
+  </ul>
+  <div class="alert warn"><strong>Disclaimer:</strong> This tool is for planning and educational purposes only. These are estimates — consult a licensed CPA or enrolled agent before filing with the IRS or your state.</div>
+  <button class="btn-cont" style="margin-top:8px" onclick="go(1)">Get Started →</button>
+</div>`; }
+
+function sEntity() {
+  const opts=[
+    {v:'sole_prop',t:'Sole Proprietor',d:'Self-employed individual. Files Schedule C + Form 1040. Net profit subject to 15.3% self-employment tax.'},
+    {v:'llc',t:'Partnership / Multi-Member LLC',d:'Pass-through entity filing Form 1065. Income flows to partners via K-1 and taxed at individual rates.'},
+    {v:'scorp',t:'S Corporation',d:'Pass-through filing Form 1120-S. Income via K-1 to shareholders. Must pay reasonable compensation to owner-employees.'},
+    {v:'ccorp',t:'C Corporation',d:'Separate entity filing Form 1120. Subject to flat 21% federal corporate income tax rate.'},
+  ];
+  return `<div class="card">
+  <span class="step-chip">Step 1 of 8</span>
+  <h1>What type of business entity are you?</h1>
+  <p class="sub">This determines which tax forms you file and how your income is calculated.</p>
+  <div class="rg">${opts.map(o=>`<label class="rc ${S.entityType===o.v?'sel':''}" onclick="pickE('${o.v}',this)">
+    <input type="radio" name="entityType" value="${o.v}" ${S.entityType===o.v?'checked':''}>
+    <div class="rc-body"><div class="t">${o.t}</div><div class="d">${o.d}</div></div>
+  </label>`).join('')}</div>
+  <div class="btn-row"><button class="btn-back" onclick="go(-1)">← Back</button><button class="btn-cont" onclick="go(1)">Continue →</button></div>
+</div>`; }
+
+function sBizInfo() {
+  const sts='AL AK AZ AR CA CO CT DE FL GA HI ID IL IN IA KS KY LA ME MD MA MI MN MS MO MT NE NV NH NJ NM NY NC ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI WY DC'.split(' ');
+  return `<div class="card">
+  <span class="step-chip">Step 2 of 8</span>
+  <h1>Tell us about your business</h1>
+  <p class="sub">This information appears on your tax return.</p>
+  <div class="fg"><div class="fl">Business Name</div><input type="text" name="businessName" value="${S.businessName}" placeholder="Acme Co, Jane Smith Consulting…"></div>
+  <div class="fg"><div class="fl">${S.entityType==='sole_prop'?'Social Security Number (SSN)':'Employer Identification Number (EIN)'}</div><input type="text" name="ein" value="${S.ein}" placeholder="${S.entityType==='sole_prop'?'XXX-XX-XXXX':'XX-XXXXXXX'}"></div>
+  <div class="fg"><div class="fl">Street Address</div><input type="text" name="businessAddress" value="${S.businessAddress}" placeholder="123 Main Street"></div>
+  <div class="fg2">
+    <div class="fg"><div class="fl">City</div><input type="text" name="businessCity" value="${S.businessCity}" placeholder="City"></div>
+    <div class="fg"><div class="fl">ZIP Code</div><input type="text" name="businessZip" value="${S.businessZip}" placeholder="90210"></div>
+  </div>
+  <div class="fg"><div class="fl">State</div>
+    <select name="businessState" onchange="S.businessState=this.value;refreshSB()">${sts.map(s=>`<option value="${s}" ${S.businessState===s?'selected':''}>${s}</option>`).join('')}</select>
+  </div>
+  <div class="fg"><div class="fl">Tax Year</div>
+    <select name="taxYear"><option value="2025" ${S.taxYear==='2025'?'selected':''}>2025</option><option value="2024" ${S.taxYear==='2024'?'selected':''}>2024</option></select>
+  </div>
+  <div class="btn-row"><button class="btn-back" onclick="go(-1)">← Back</button><button class="btn-cont" onclick="go(1)">Continue →</button></div>
+</div>`; }
+
+function sPersonal() {
+  const opts=[
+    {v:'single',t:'Single',d:'Unmarried or legally separated'},
+    {v:'mfj',t:'Married Filing Jointly',d:'Married, filing a combined return — typically the lowest tax rate'},
+    {v:'mfs',t:'Married Filing Separately',d:'Married but filing separate returns'},
+    {v:'hoh',t:'Head of Household',d:'Unmarried with a qualifying dependent'},
+  ];
+  return `<div class="card">
+  <span class="step-chip">Step 3 of 8</span>
+  <h1>Your personal information</h1>
+  <p class="sub">Since your business income passes through to your personal return, we need your individual filing details.</p>
+  <div class="fg"><div class="fl">Your Full Name</div><input type="text" name="ownerName" value="${S.ownerName}" placeholder="First Last"></div>
+  <div class="fg"><div class="fl">Social Security Number (SSN)</div><input type="text" name="ownerSSN" value="${S.ownerSSN}" placeholder="XXX-XX-XXXX"></div>
+  <div class="fg" style="margin-top:24px"><div class="fl" style="margin-bottom:12px">Filing Status</div>
+    <div class="rg">${opts.map(o=>`<label class="rc ${S.filingStatus===o.v?'sel':''}" onclick="pickF('${o.v}',this)">
+      <input type="radio" name="filingStatus" value="${o.v}" ${S.filingStatus===o.v?'checked':''}>
+      <div class="rc-body"><div class="t">${o.t}</div><div class="d">${o.d}</div></div>
+    </label>`).join('')}</div>
+  </div>
+  <div class="btn-row"><button class="btn-back" onclick="go(-1)">← Back</button><button class="btn-cont" onclick="go(1)">Continue →</button></div>
+</div>`; }
+
+function sRevenue() { return `<div class="card">
+  <span class="step-chip">Step 4 of 8</span>
+  <h1>Revenue &amp; Income</h1>
+  <p class="sub">Enter your total business income for ${S.taxYear}. Corresponds to Schedule C Part I or Form 1120 Line 1.</p>
+  <div class="sh">Sales</div>
+  ${mf('gs','Gross Sales / Receipts','before returns &amp; allowances','grossSales')}
+  ${mf('ra','Returns &amp; Allowances','deducted from gross sales','returnsAllowances')}
+  <hr class="sd"><div class="sh">Other Income</div>
+  ${mf('oi','Other Business Income','interest, awards, miscellaneous','otherIncome')}
+  <div class="btn-row"><button class="btn-back" onclick="go(-1)">← Back</button><button class="btn-cont" onclick="go(1)">Continue →</button></div>
+</div>`; }
+
+function sCOGS() { return `<div class="card">
+  <span class="step-chip">Step 5 of 8</span>
+  <h1>Cost of Goods Sold</h1>
+  <p class="sub">If you sell products, enter your inventory costs. Service businesses can leave these at $0.</p>
+  <div class="alert warn"><strong>Formula:</strong> Beginning Inventory + Purchases − Ending Inventory = Cost of Goods Sold</div>
+  ${mf('bi','Beginning Inventory','value on January 1','beginningInventory')}
+  ${mf('pu','Purchases','materials &amp; merchandise bought this year','purchases')}
+  ${mf('ei','Ending Inventory','value on December 31','endingInventory')}
+  <div class="btn-row"><button class="btn-back" onclick="go(-1)">← Back</button><button class="btn-cont" onclick="go(1)">Continue →</button></div>
+</div>`; }
+
+function sExpenses() {
+  const flds=[
+    ['advertising','Advertising','Ads, promotions, social media'],
+    ['carExpenses','Car &amp; Truck Expenses','Actual costs or standard mileage (67¢/mi for 2025)'],
+    ['depreciation','Depreciation','From Form 4562 — listed property &amp; intangibles'],
+    ['employeeBenefits','Employee Benefit Programs','Health insurance, retirement, fringe benefits'],
+    ['insurance','Insurance (not health)','Business, liability, property insurance'],
+    ['legalProfessional','Legal &amp; Professional Services','Attorneys, CPAs, consultants'],
+    ['officeExpense','Office Expenses','Supplies, postage, small equipment'],
+    ['rentEquipment','Rent / Lease — Equipment','Machinery, computers, vehicles you lease'],
+    ['rentSpace','Rent / Lease — Space','Office, warehouse, or retail space rent'],
+    ['repairsMaintenance','Repairs &amp; Maintenance','Routine upkeep of business property'],
+    ['supplies','Supplies','Business supplies not counted in COGS'],
+    ['taxesLicenses','Taxes &amp; Licenses','Business licenses, payroll taxes, local fees'],
+    ['travel','Business Travel','100% deductible — airfare, hotel, rental car'],
+    ['meals','Meals','50% deductible — enter the full amount paid'],
+    ['utilities','Utilities','Electricity, internet, phone for business'],
+    ['wages','Wages &amp; Salaries','Employee wages (not owner draws)'],
+    ['otherExpenses','Other Expenses','Ordinary &amp; necessary expenses not listed above'],
+  ];
+  return `<div class="card">
+  <span class="step-chip">Step 6 of 8</span>
+  <h1>Business Expenses</h1>
+  <p class="sub">Enter your ordinary and necessary business expenses. Meals automatically apply the 50% deduction rule.</p>
+  ${flds.map(([k,l,h])=>mf(k,l,h,k)).join('')}
+  <div class="btn-row"><button class="btn-back" onclick="go(-1)">← Back</button><button class="btn-cont" onclick="go(1)">Continue →</button></div>
+</div>`; }
+
+function sDeductions() {
+  const showQBI = S.entityType !== 'ccorp';
+  return `<div class="card">
+  <span class="step-chip">Step 7 of 8</span>
+  <h1>Deductions &amp; Credits</h1>
+  <p class="sub">These deductions reduce your taxable income before calculating what you owe.</p>
+  <div class="sh">Section 179 — Immediate Expensing</div>
+  ${mf('s179','Section 179 Deduction','max $1,220,000 for 2025 — equipment, software, vehicles','section179')}
+  ${showQBI?`<hr class="sd"><div class="sh">Qualified Business Income Deduction (§199A)</div>
+  <div class="alert info">Eligible pass-through businesses may deduct up to 20% of net qualified business income. Income phase-outs and W-2 wage limits apply for high earners (over $383,900 MFJ for 2025).</div>
+  <div class="rg">
+    <label class="rc ${S.qbi?'sel':''}" onclick="pickQBI(true,this)"><input type="radio" name="qbi" value="true" ${S.qbi?'checked':''}>
+      <div class="rc-body"><div class="t">Claim QBI Deduction (20% of net profit)</div><div class="d">Reduces taxable income if your business qualifies. Simplified calculation applied here.</div></div></label>
+    <label class="rc ${!S.qbi?'sel':''}" onclick="pickQBI(false,this)"><input type="radio" name="qbi" value="false" ${!S.qbi?'checked':''}>
+      <div class="rc-body"><div class="t">Skip QBI Deduction</div><div class="d">Your business may not qualify (e.g., specified service trade, income over phase-out threshold).</div></div></label>
+  </div>`:''}
+  <div class="btn-row"><button class="btn-back" onclick="go(-1)">← Back</button><button class="btn-cont" onclick="go(1)">Continue →</button></div>
+</div>`; }
+
+function sReview() {
+  const t=calc();
+  const en={sole_prop:'Sole Proprietor',llc:'Partnership / LLC',scorp:'S Corporation',ccorp:'C Corporation'};
+  const fn={single:'Single',mfj:'Married Filing Jointly',mfs:'Married Filing Separately',hoh:'Head of Household'};
+  return `<div class="card">
+  <span class="step-chip">Step 8 of 8</span>
+  <h1>Review Your Return</h1>
+  <p class="sub">Check everything before generating your printable tax return.</p>
+  <div class="sh">Business</div>
+  <div class="rb">
+    <div class="rl"><span>Entity Type</span><strong>${en[S.entityType]}</strong></div>
+    <div class="rl"><span>Business Name</span><strong>${S.businessName||'—'}</strong></div>
+    <div class="rl"><span>EIN / SSN</span><strong>${S.ein||'—'}</strong></div>
+    <div class="rl"><span>Address</span><strong>${[S.businessAddress,S.businessCity,S.businessState,S.businessZip].filter(Boolean).join(', ')||'—'}</strong></div>
+    ${S.entityType!=='ccorp'?`<div class="rl"><span>Owner</span><strong>${S.ownerName||'—'} · ${fn[S.filingStatus]}</strong></div>`:''}
+  </div>
+  <div class="sh">Income Summary</div>
+  <div class="rb">
+    <div class="rl"><span>Gross Revenue</span><strong>${$(t.gross)}</strong></div>
+    <div class="rl"><span>Cost of Goods Sold</span><strong>${$n(t.cogs)}</strong></div>
+    <div class="rl"><span>Business Expenses</span><strong>${$n(t.exp)}</strong></div>
+    <div class="rl bold"><span>Net Profit</span><strong>${$(t.net)}</strong></div>
+  </div>
+  <div class="sh">Tax Calculation</div>
+  <div class="rb">
+    ${t.seTax>0?`<div class="rl"><span>Self-Employment Tax</span><strong>${$(t.seTax)}</strong></div>`:''}
+    ${t.deductSE>0?`<div class="rl"><span>½ SE Tax Deduction</span><strong>${$n(t.deductSE)}</strong></div>`:''}
+    ${t.qbiDed>0?`<div class="rl"><span>QBI Deduction (20%)</span><strong>${$n(t.qbiDed)}</strong></div>`:''}
+    <div class="rl"><span>Federal Income Tax</span><strong>${$(t.fedTax)}</strong></div>
+    <div class="rl"><span>State Tax (${S.businessState})</span><strong>${$(t.stateTax)}</strong></div>
+    <div class="rl bold" style="color:var(--blue)"><span>Total Estimated Tax</span><strong>${$(t.total)}</strong></div>
+  </div>
+  <div class="btn-row"><button class="btn-back" onclick="go(-1)">← Back</button><button class="btn-cont" onclick="go(1)">Generate Tax Return →</button></div>
+</div>`; }
+
+function sTaxReturn() {
+  const t=calc();
+  const en={sole_prop:'Sole Proprietor',llc:'Partnership / Multi-Member LLC',scorp:'S Corporation',ccorp:'C Corporation'};
+  const fm={sole_prop:'Schedule C  +  Form 1040',llc:'Form 1065  +  Schedule K-1',scorp:'Form 1120-S  +  Schedule K-1',ccorp:'Form 1120'};
+  const fn={single:'Single',mfj:'Married Filing Jointly',mfs:'Married Filing Separately',hoh:'Head of Household'};
+  const dl={sole_prop:'April 15, 2026',llc:'March 15, 2026',scorp:'March 15, 2026',ccorp:'April 15, 2026'};
+  const gp=t.gross-t.cogs;
+  const eff=t.net>0?((t.total/t.net)*100).toFixed(1):'0.0';
+  const filingNotes={
+    sole_prop:'Attach Schedule C to Form 1040 and e-file or mail by April 15, 2026\n• Attach Schedule SE for self-employment tax calculation\n• Pay quarterly estimated taxes (Form 1040-ES) if you expect to owe over $1,000',
+    llc:'File Form 1065 by March 15, 2026 (or extend with Form 7004)\n• Issue Schedule K-1 to each partner/member by March 15\n• Each partner reports K-1 income on their individual Form 1040',
+    scorp:'File Form 1120-S by March 15, 2026 (or extend with Form 7004)\n• Issue Schedule K-1 to each shareholder by March 15\n• Shareholders report K-1 income on Form 1040 and pay tax individually',
+    ccorp:'File Form 1120 by April 15, 2026 (or extend with Form 7004)\n• Corporate income tax is due with the return\n• Pay estimated corporate taxes using Form 1120-W if annual liability exceeds $500',
+  };
+  return `<div class="card">
+  <div style="text-align:center;margin-bottom:28px">
+    <h1 style="font-size:22px">Your Tax Return is Ready</h1>
+    <p class="sub" style="margin-bottom:0">Review below, then print or save your summary.</p>
+  </div>
+  <div class="abar">
+    <button class="btn-print" onclick="window.print()">🖨&nbsp; Print / Save as PDF</button>
+    <button class="btn-dl" onclick="dlSummary()">⬇&nbsp; Download .txt Summary</button>
+  </div>
+  <div id="pret">
+    <div class="rh">
+      <div class="rht">BUSINESS TAX RETURN — TAX YEAR ${S.taxYear}</div>
+      <div style="font-size:12px;margin-top:4px">${fm[S.entityType]}</div>
+      <div style="font-size:10px;margin-top:3px;opacity:.6">PREPARED WITH TAXFLOW PRO · FOR PLANNING PURPOSES ONLY · NOT AN OFFICIAL IRS DOCUMENT</div>
+    </div>
+
+    <div class="rs">
+      <div class="rst">SECTION A — TAXPAYER INFORMATION</div>
+      <div class="rln"><span>Business Name</span><span>${S.businessName||'_________________________'}</span></div>
+      <div class="rln"><span>${S.entityType==='sole_prop'?'SSN':'EIN'}</span><span>${S.ein||'___________'}</span></div>
+      <div class="rln"><span>Address</span><span>${S.businessAddress||'_________________________'}</span></div>
+      <div class="rln"><span>City / State / ZIP</span><span>${[S.businessCity,S.businessState,S.businessZip].filter(Boolean).join(', ')||'_________________________'}</span></div>
+      <div class="rln"><span>Entity Type</span><span>${en[S.entityType]}</span></div>
+      <div class="rln"><span>Tax Form Filed</span><span>${fm[S.entityType]}</span></div>
+      <div class="rln"><span>Tax Year</span><span>${S.taxYear}</span></div>
+      ${S.entityType!=='ccorp'?`<div class="rln"><span>Owner Name</span><span>${S.ownerName||'_________________________'}</span></div>
+      <div class="rln"><span>Owner SSN</span><span>${S.ownerSSN||'___________'}</span></div>
+      <div class="rln"><span>Filing Status</span><span>${fn[S.filingStatus]||'—'}</span></div>`:''}
+    </div>
+
+    <div class="rs">
+      <div class="rst">SECTION B — INCOME  (Sch. C Part I / Form 1120 Line 1)</div>
+      <div class="rln"><span>1a. Gross Receipts or Sales</span><span>${$(S.grossSales)}</span></div>
+      <div class="rln"><span>1b. Less: Returns &amp; Allowances</span><span>(${$(S.returnsAllowances)})</span></div>
+      <div class="rln"><span>1c. Other Business Income</span><span>${$(S.otherIncome)}</span></div>
+      <div class="rln sub"><span>Net Revenue</span><span>${$(t.gross)}</span></div>
+    </div>
+
+    <div class="rs">
+      <div class="rst">SECTION C — COST OF GOODS SOLD  (Sch. C Part III)</div>
+      <div class="rln"><span>2a. Beginning Inventory (Jan 1)</span><span>${$(S.beginningInventory)}</span></div>
+      <div class="rln"><span>2b. Purchases during year</span><span>${$(S.purchases)}</span></div>
+      <div class="rln"><span>2c. Less: Ending Inventory (Dec 31)</span><span>(${$(S.endingInventory)})</span></div>
+      <div class="rln sub"><span>Cost of Goods Sold</span><span>(${$(t.cogs)})</span></div>
+      <div class="rln sub"><span>Gross Profit  (Revenue − COGS)</span><span>${$(gp)}</span></div>
+    </div>
+
+    <div class="rs">
+      <div class="rst">SECTION D — BUSINESS EXPENSES  (Sch. C Part II / Form 1120 Lines 12–26)</div>
+      <div class="rln"><span>Line 8.   Advertising</span><span>${$(S.advertising)}</span></div>
+      <div class="rln"><span>Line 9.   Car &amp; Truck Expenses</span><span>${$(S.carExpenses)}</span></div>
+      <div class="rln"><span>Line 13.  Depreciation (Form 4562)</span><span>${$(S.depreciation)}</span></div>
+      <div class="rln"><span>Line 14.  Employee Benefit Programs</span><span>${$(S.employeeBenefits)}</span></div>
+      <div class="rln"><span>Line 15.  Insurance (not health)</span><span>${$(S.insurance)}</span></div>
+      <div class="rln"><span>Line 17.  Legal &amp; Professional Services</span><span>${$(S.legalProfessional)}</span></div>
+      <div class="rln"><span>Line 18.  Office Expense</span><span>${$(S.officeExpense)}</span></div>
+      <div class="rln"><span>Line 20a. Rent / Lease — Equipment</span><span>${$(S.rentEquipment)}</span></div>
+      <div class="rln"><span>Line 20b. Rent / Lease — Space</span><span>${$(S.rentSpace)}</span></div>
+      <div class="rln"><span>Line 21.  Repairs &amp; Maintenance</span><span>${$(S.repairsMaintenance)}</span></div>
+      <div class="rln"><span>Line 22.  Supplies</span><span>${$(S.supplies)}</span></div>
+      <div class="rln"><span>Line 23.  Taxes &amp; Licenses</span><span>${$(S.taxesLicenses)}</span></div>
+      <div class="rln"><span>Line 24a. Business Travel</span><span>${$(S.travel)}</span></div>
+      <div class="rln"><span>Line 24b. Meals (50% of ${$(S.meals)})</span><span>${$((S.meals||0)*.5)}</span></div>
+      <div class="rln"><span>Line 25.  Utilities</span><span>${$(S.utilities)}</span></div>
+      <div class="rln"><span>Line 26.  Wages &amp; Salaries</span><span>${$(S.wages)}</span></div>
+      <div class="rln"><span>Line 27a. Section 179 Deduction</span><span>${$(S.section179)}</span></div>
+      <div class="rln"><span>Line 28.  Other Expenses</span><span>${$(S.otherExpenses)}</span></div>
+      <div class="rln sub"><span>Total Expenses</span><span>(${$(t.exp)})</span></div>
+    </div>
+
+    <div class="rs">
+      <div class="rst">SECTION E — NET PROFIT / LOSS</div>
+      <div class="rln"><span>Line 31. Net Profit or (Loss)</span><span>${t.net>=0?$(t.net):'('+$(Math.abs(t.net))+')'}</span></div>
+      ${t.seTax>0?`<div class="rln"><span>Schedule SE — Self-Employment Tax</span><span>${$(t.seTax)}</span></div>`:''}
+      ${t.deductSE>0?`<div class="rln"><span>Deductible Portion of SE Tax (½)</span><span>(${$(t.deductSE)})</span></div>`:''}
+      ${t.qbiDed>0?`<div class="rln"><span>§199A QBI Deduction (20%)</span><span>(${$(t.qbiDed)})</span></div>`:''}
+      ${S.entityType!=='ccorp'?`<div class="rln"><span>Standard Deduction (${S.taxYear})</span><span>(${$(STD[S.filingStatus]||15000)})</span></div>`:''}
+    </div>
+
+    <div class="rs">
+      <div class="rst">SECTION F — TAX CALCULATION</div>
+      ${S.entityType==='ccorp'
+        ?`<div class="rln"><span>Corporate Tax Rate (IRC §11)</span><span>21% flat</span></div>`
+        :`<div class="rln"><span>Filing Status</span><span>${fn[S.filingStatus]}</span></div>
+          <div class="rln"><span>Rate Schedule</span><span>2025 Federal Income Tax Brackets</span></div>`}
+      ${t.seTax>0?`<div class="rln"><span>Self-Employment Tax</span><span>${$(t.seTax)}</span></div>`:''}
+      <div class="rln"><span>Federal Income Tax</span><span>${$(t.fedTax)}</span></div>
+      <div class="rln"><span>State Income Tax (${S.businessState} — estimated)</span><span>${$(t.stateTax)}</span></div>
+      <div class="rln tot"><span>TOTAL ESTIMATED TAX LIABILITY</span><span>${$(t.total)}</span></div>
+      <div class="rln"><span>Effective Tax Rate</span><span>${eff}%</span></div>
+      <div class="rln"><span>Estimated Quarterly Payment (Form 1040-ES)</span><span>${$(t.total/4)} per quarter</span></div>
+    </div>
+
+    <div class="rs">
+      <div class="rst">SECTION G — FILING INSTRUCTIONS</div>
+      <div style="padding:10px;font-size:11.5px;line-height:1.8">
+        <strong>Federal Filing Deadline:</strong> ${dl[S.entityType]}<br>
+        ${filingNotes[S.entityType].split('\n').map((l,i)=>(i===0?'• ':i===1?'• ':i===2?'• ':'• ')+l.replace(/^•\s*/,'')).join('<br>')}
+        <br><br><strong>State Filing (${S.businessState}):</strong><br>
+        • File your ${S.businessState} business income tax return per state-specific requirements<br>
+        • Check your state's department of revenue website for exact deadlines and forms<br>
+        • Estimated state tax payments may be required separately
+        <br><br><strong>How to E-File Federally:</strong><br>
+        • IRS Free File at irs.gov/freefile (if AGI ≤ $84,000)<br>
+        • Authorized e-file providers: irs.gov/efile<br>
+        • Mail: visit irs.gov/filing for mailing addresses by state and form type
+      </div>
+    </div>
+
+    <div class="rs" style="margin-top:28px">
+      <div class="rst">DECLARATION &amp; SIGNATURE</div>
+      <div style="padding:10px;font-size:11px;color:#555;line-height:1.6">Under penalties of perjury, I declare that I have examined this return and accompanying schedules and statements, and to the best of my knowledge and belief, they are true, correct, and complete. Declaration of preparer (other than taxpayer) is based on all information of which preparer has any knowledge.</div>
+      <div class="sig-grid">
+        <div><div class="sig-line"></div><div>Taxpayer Signature</div></div>
+        <div><div class="sig-line"></div><div>Date</div></div>
+        <div><div class="sig-line"></div><div>Preparer Signature (if applicable)</div></div>
+        <div><div class="sig-line"></div><div>Preparer PTIN</div></div>
+      </div>
+    </div>
+
+    <div style="text-align:center;font-size:10px;color:#999;margin-top:24px;padding-top:14px;border-top:1px dashed #ccc">
+      Generated by TaxFlow Pro · For Planning Purposes Only · Not a Legal Tax Document<br>
+      Consult a licensed CPA or enrolled agent before filing with the IRS or your state tax authority.
+    </div>
+  </div>
+  <div class="btn-row" style="margin-top:28px">
+    <button class="btn-back" onclick="go(-1)">← Edit Return</button>
+    <button class="btn-cont" onclick="window.print()">🖨 Print / Save PDF</button>
+  </div>
+</div>`; }
+
+/* ─── PICKERS ─── */
+function pickE(v,el) { S.entityType=v; el.closest('.rg').querySelectorAll('.rc').forEach(c=>c.classList.remove('sel')); el.classList.add('sel'); el.querySelector('input').checked=true; refreshSB(); }
+function pickF(v,el) { S.filingStatus=v; el.closest('.rg').querySelectorAll('.rc').forEach(c=>c.classList.remove('sel')); el.classList.add('sel'); el.querySelector('input').checked=true; refreshSB(); }
+function pickQBI(v,el) { S.qbi=v; el.closest('.rg').querySelectorAll('.rc').forEach(c=>c.classList.remove('sel')); el.classList.add('sel'); el.querySelector('input').checked=true; refreshSB(); }
+
+/* ─── DOWNLOAD ─── */
+function dlSummary() {
+  const t=calc();
+  const en={sole_prop:'Sole Proprietor',llc:'Partnership/LLC',scorp:'S Corporation',ccorp:'C Corporation'};
+  const fn={single:'Single',mfj:'Married Filing Jointly',mfs:'Married Filing Separately',hoh:'Head of Household'};
+  const txt=`TAXFLOW PRO — BUSINESS TAX SUMMARY
+Tax Year: ${S.taxYear}   Generated: ${new Date().toLocaleDateString()}
+======================================================
+
+BUSINESS INFORMATION
+Entity Type:              ${en[S.entityType]}
+Business Name:            ${S.businessName||'N/A'}
+EIN / SSN:                ${S.ein||'N/A'}
+Address:                  ${[S.businessAddress,S.businessCity,S.businessState,S.businessZip].filter(Boolean).join(', ')||'N/A'}
+${S.entityType!=='ccorp'?`Owner:                    ${S.ownerName||'N/A'}
+Filing Status:            ${fn[S.filingStatus]}`:''}
+
+INCOME SUMMARY
+Gross Revenue:            ${$(t.gross)}
+Cost of Goods Sold:      (${$(t.cogs)})
+Business Expenses:       (${$(t.exp)})
+                          ──────────────────
+Net Profit:               ${$(t.net)}
+
+TAX CALCULATION
+Self-Employment Tax:      ${$(t.seTax)}
+1/2 SE Tax Deduction:    (${$(t.deductSE)})
+QBI Deduction (20%):     (${$(t.qbiDed)})
+Federal Income Tax:       ${$(t.fedTax)}
+State Tax (${S.businessState}):           ${$(t.stateTax)}
+                          ──────────────────
+TOTAL TAX OWED:           ${$(t.total)}
+Effective Rate:           ${t.net>0?((t.total/t.net)*100).toFixed(1):'0.0'}%
+Quarterly Payment Est:    ${$(t.total/4)}
+
+EXPENSE DETAILS
+Advertising:              ${$(S.advertising)}
+Car & Truck:              ${$(S.carExpenses)}
+Depreciation:             ${$(S.depreciation)}
+Employee Benefits:        ${$(S.employeeBenefits)}
+Insurance:                ${$(S.insurance)}
+Legal & Professional:     ${$(S.legalProfessional)}
+Office Expense:           ${$(S.officeExpense)}
+Rent - Equipment:         ${$(S.rentEquipment)}
+Rent - Space:             ${$(S.rentSpace)}
+Repairs & Maintenance:    ${$(S.repairsMaintenance)}
+Supplies:                 ${$(S.supplies)}
+Taxes & Licenses:         ${$(S.taxesLicenses)}
+Travel:                   ${$(S.travel)}
+Meals (50%):              ${$((S.meals||0)*.5)}
+Utilities:                ${$(S.utilities)}
+Wages & Salaries:         ${$(S.wages)}
+Section 179:              ${$(S.section179)}
+Other Expenses:           ${$(S.otherExpenses)}
+
+DISCLAIMER
+This summary is for planning purposes only and does not constitute legal tax advice.
+Consult a licensed CPA or enrolled agent before filing with the IRS or your state.
+`;
+  const b=new Blob([txt],{type:'text/plain'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(b);
+  a.download=`TaxSummary_${(S.businessName||'Business').replace(/\s+/g,'_')}_${S.taxYear}.txt`;
+  a.click(); URL.revokeObjectURL(a.href);
+}
+
+/* ─── RENDER ─── */
+function render() {
+  const map={welcome:sWelcome,entity:sEntity,bizinfo:sBizInfo,personal:sPersonal,revenue:sRevenue,cogs:sCOGS,expenses:sExpenses,deductions:sDeductions,review:sReview,taxreturn:sTaxReturn};
+  document.getElementById('mc').innerHTML=(map[SCREENS[cur]]||sWelcome)();
+  refreshProg(); refreshSB();
+}
+render();
+</script>
+</body>
+</html>
